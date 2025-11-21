@@ -9,7 +9,7 @@ const { id,
 	access_key }			= require('../collection.json');
 const sdk				= require('../../src/index.js');
 const { Collection }			= sdk;
-sdk.API_BASE_URL			= `http://localhost:2884`;
+sdk.API_BASE_URL			= process.env.MAGICAUTH_API_URL || 'https://dev.magicauth.ca';
 
 
 const magicauth				= new Collection( id, access_key.key);

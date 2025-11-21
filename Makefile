@@ -29,6 +29,9 @@ use-npm:		  use-npm-serious-error-types	  use-npm-authentic-codecs	  use-npm-htt
 #
 TEST_SQLITE		= tests/testing.sqlite
 TEST_COLLECTION		= tests/collection.json
+MAGICAUTH_API_URL	?= https://dev.magicauth.ca
+export MAGICAUTH_API_URL
+
 test:			build test-setup
 	npx mocha --recursive ./tests
 test-debug:		build test-setup
@@ -46,10 +49,10 @@ test-integration-debug:	build test-setup
 
 test-setup:		$(TEST_COLLECTION) $(TEST_SQLITE)
 $(TEST_COLLECTION):
-	curl -X POST "http://localhost:2884/collections" | jq . > $@
+	curl -X POST "$(MAGICAUTH_API_URL)/collections" | jq . > $@
 $(TEST_SQLITE):		tests/build.sql
 	rm -f $@
-	nix-shell --command "sqlite3 $@ < tests/build.sql"
+	sqlite3 $@ < tests/build.sql
 sqlite-interactive:
 	sqlite3 -header -column $(TEST_SQLITE)
 
