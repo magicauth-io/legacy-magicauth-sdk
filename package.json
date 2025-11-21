@@ -26,6 +26,6 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mjbrisebois/magicauth-sdk"
+    "url": "https://github.com/magicauth-io/legacy-magicauth-sdk"
   }
 }
