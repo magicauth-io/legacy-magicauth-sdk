@@ -1,15 +1,24 @@
-const path				= require('path');
-const log				= require('@whi/stdlog')(path.basename( __filename ), {
+import path from 'path';
+import { fileURLToPath } from 'url';
+import stdlog from '@whi/stdlog';
+import { expect } from 'chai';
+import { readFileSync } from 'fs';
+import { Collection } from '../../dist/index.js';
+import { config } from '../../dist/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const log = stdlog(path.basename(__filename), {
     level: process.env.LOG_LEVEL || 'fatal',
 });
 
-const expect				= require('chai').expect;
+const collectionData = JSON.parse(
+    readFileSync(new URL('../collection.json', import.meta.url), 'utf-8')
+);
+const { id, access_key } = collectionData;
 
-const { id,
-	access_key }			= require('../collection.json');
-const sdk				= require('../../src/index.js');
-const { Collection }			= sdk;
-sdk.API_BASE_URL			= process.env.MAGICAUTH_API_URL || 'https://dev.magicauth.ca';
+config.API_BASE_URL = process.env.MAGICAUTH_API_URL || 'https://dev.magicauth.ca';
 
 
 const magicauth				= new Collection( id, access_key.key);

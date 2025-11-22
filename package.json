@@ -1,12 +1,30 @@
 {
   "name": "@whi/magicauth-sdk",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "The Javascript standard development kit for MagicAuth services",
-  "main": "src/index.js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "files": [
-    "README.md"
+    "dist",
+    "README.md",
+    "API_CONTRACT.md",
+    "AUTHENTICATION_FLOW.md"
   ],
   "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf dist",
+    "dev": "tsc --watch",
+    "lint": "eslint src",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -16,11 +34,18 @@
     "ua-parser-js": "^0.7.21"
   },
   "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/ua-parser-js": "^0.7.39",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
     "chai": "^4.2.0",
+    "eslint": "^9.39.1",
     "knex": "^0.21.1",
     "mocha": "^7.1.2",
+    "prettier": "^3.6.2",
     "sqlite3": "^5.1.7",
-    "superstruct": "^0.8.3"
+    "superstruct": "^0.8.3",
+    "typescript": "^5.9.3"
   },
   "author": "Matthew Brisebois",
   "license": "ISC",
