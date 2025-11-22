@@ -33,19 +33,19 @@ MAGICAUTH_API_URL	?= https://dev.magicauth.ca
 export MAGICAUTH_API_URL
 
 test:			build test-setup
-	npx mocha --recursive ./tests
+	npm test
 test-debug:		build test-setup
-	LOG_LEVEL=silly npx mocha --recursive ./tests
+	LOG_LEVEL=silly npm test
 
 test-unit:		build test-setup
-	npx mocha ./tests/unit
+	npm test tests/unit
 test-unit-debug:	build test-setup
-	LOG_LEVEL=silly npx mocha ./tests/unit
+	LOG_LEVEL=silly npm test tests/unit
 
 test-integration:	build test-setup
-	npx mocha ./tests/integration
+	npm test tests/integration
 test-integration-debug:	build test-setup
-	LOG_LEVEL=silly npx mocha ./tests/integration
+	LOG_LEVEL=silly npm test tests/integration
 
 test-setup:		$(TEST_COLLECTION) $(TEST_SQLITE)
 $(TEST_COLLECTION):

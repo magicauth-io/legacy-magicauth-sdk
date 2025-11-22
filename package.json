@@ -18,14 +18,16 @@
     "AUTHENTICATION_FLOW.md"
   ],
   "scripts": {
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
     "clean": "rm -rf dist",
     "dev": "tsc --watch",
-    "lint": "eslint src",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\"",
+    "lint": "eslint src tests",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
     "prepublishOnly": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@whi/http": "^0.2.1",
@@ -38,14 +40,14 @@
     "@types/ua-parser-js": "^0.7.39",
     "@typescript-eslint/eslint-plugin": "^8.47.0",
     "@typescript-eslint/parser": "^8.47.0",
-    "chai": "^4.2.0",
+    "@vitest/coverage-v8": "^4.0.13",
     "eslint": "^9.39.1",
     "knex": "^0.21.1",
-    "mocha": "^7.1.2",
     "prettier": "^3.6.2",
     "sqlite3": "^5.1.7",
     "superstruct": "^0.8.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.13"
   },
   "author": "Matthew Brisebois",
   "license": "ISC",
