@@ -8,7 +8,7 @@ This document describes the complete authentication flows supported by the Magic
 
 ## Overview
 
-MagicAuth provides a passwordless authentication system where credentials are managed by the MagicAuth service. Your application stores only the MagicAuth credential ID (not passwords) and uses sessions for authentication.
+MagicAuth provides password-based authentication with remote credential storage. Credentials are managed by the MagicAuth service. Your application stores only the MagicAuth credential ID (not passwords) and uses sessions for authentication.
 
 **Key Concepts:**
 - **Credential**: A MagicAuth-managed authentication credential (has a password, stored remotely)

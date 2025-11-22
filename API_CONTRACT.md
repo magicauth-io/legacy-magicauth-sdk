@@ -6,7 +6,7 @@ This document defines the complete API contract for the MagicAuth SDK. This cont
 
 ## Overview
 
-The SDK is a client library for the MagicAuth authentication service. It provides passwordless authentication using cryptographic credentials, with optional IP address and User Agent validation for enhanced security.
+The SDK is a client library for the MagicAuth authentication service. It provides password-based authentication with remote credential storage, with optional IP address and User Agent validation for enhanced security.
 
 **Base URL:** `https://vault.magicauth.ca` (configurable via `API_BASE_URL` export)
 

@@ -6,10 +6,10 @@ The JavaScript SDK for integrating MagicAuth authentication services into your a
 
 ## Overview
 
-MagicAuth provides secure, passwordless authentication where credentials are managed remotely. Your application stores only credential IDs (not passwords) and uses sessions with IP address and User Agent validation for enhanced security.
+MagicAuth provides secure authentication with remote credential storage. Your application stores only credential IDs (not passwords) and uses sessions with IP address and User Agent validation for enhanced security.
 
 **Key Features:**
-- Passwordless authentication with remote credential storage
+- Remote credential storage - passwords managed by MagicAuth service
 - Session-based authentication with context validation
 - IP address and User Agent comparison for session security
 - Simple integration with existing user systems
@@ -401,13 +401,6 @@ npm test
 ```bash
 LOG_LEVEL=debug npm test
 ```
-
-## Dependencies
-
-- [@whi/http](https://www.npmjs.com/package/@whi/http) - HTTP client
-- [@whi/stdlog](https://www.npmjs.com/package/@whi/stdlog) - Logging
-- [ip](https://www.npmjs.com/package/ip) - IP address utilities
-- [ua-parser-js](https://www.npmjs.com/package/ua-parser-js) - User Agent parsing
 
 ## License
 
