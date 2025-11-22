@@ -148,6 +148,72 @@ function basic_tests() {
     });
 }
 
+function password_update_tests() {
+    let test_user_id: string;
+    const original_password = 'OriginalPass1!';
+    const new_password = 'NewPass2!';
+
+    it('should create a test user for password update', async () => {
+        const magicuser = await magicauth.user(original_password);
+        test_user_id = magicuser.id;
+
+        expect(test_user_id).toBeTypeOf('string');
+    });
+
+    it('should update user password', async () => {
+        const updated_user = await magicauth.update_password(
+            test_user_id,
+            original_password,
+            new_password
+        );
+        log.silly('Updated user: %s', JSON.stringify(updated_user, null, 4));
+
+        expect(updated_user.id).toBe(test_user_id);
+    });
+
+    it('should create session with new password', async () => {
+        const session = await magicauth.session(test_user_id, new_password, ip_address, user_agent);
+        log.silly('Session with new password: %s', JSON.stringify(session, null, 4));
+
+        expect(session.id).toBeTypeOf('string');
+    });
+}
+
+function error_handling_tests() {
+    let valid_user_id: string;
+    let valid_session_id: string;
+    const valid_password = 'ValidPass1!';
+
+    it('should create a test user for error tests', async () => {
+        const magicuser = await magicauth.user(valid_password);
+        valid_user_id = magicuser.id;
+
+        const session = await magicauth.session(valid_user_id, valid_password, ip_address, user_agent);
+        valid_session_id = session.id;
+
+        expect(valid_user_id).toBeTypeOf('string');
+        expect(valid_session_id).toBeTypeOf('string');
+    });
+
+    it('should throw error on wrong password', async () => {
+        await expect(
+            magicauth.session(valid_user_id, 'WrongPassword!', ip_address, user_agent)
+        ).rejects.toThrow();
+    });
+
+    it('should throw error on invalid session ID', async () => {
+        await expect(
+            magicauth.validate('invalid-session-id', ip_address, user_agent)
+        ).rejects.toThrow();
+    });
+
+    it('should throw error on wrong current password in update', async () => {
+        await expect(
+            magicauth.update_password(valid_user_id, 'WrongCurrentPass!', 'NewPass!')
+        ).rejects.toThrow();
+    });
+}
+
 describe('SDK Integration Tests', () => {
     afterAll(async () => {
         log.normal('Destroy database connection...');
@@ -155,4 +221,6 @@ describe('SDK Integration Tests', () => {
     });
 
     describe('Basic', basic_tests);
+    describe('Password Update', password_update_tests);
+    describe('Error Handling', error_handling_tests);
 });
