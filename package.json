@@ -1,7 +1,15 @@
 {
   "name": "@whi/magicauth-sdk",
   "version": "0.2.0",
-  "description": "The Javascript standard development kit for MagicAuth services",
+  "description": "SDK for MagicAuth remote credential storage and session management",
+  "keywords": [
+    "security",
+    "sdk",
+    "authentication",
+    "credentials",
+    "session-management",
+    "magicauth"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,9 +21,7 @@
   },
   "files": [
     "dist",
-    "README.md",
-    "API_CONTRACT.md",
-    "AUTHENTICATION_FLOW.md"
+    "README.md"
   ],
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.build.json",
