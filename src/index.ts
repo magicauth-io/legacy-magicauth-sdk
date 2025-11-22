@@ -2,8 +2,7 @@ import * as path from 'path';
 import { fileURLToPath } from 'url';
 // @ts-expect-error - No types available for @whi/stdlog
 import stdlog from '@whi/stdlog';
-// @ts-expect-error - No types available for ip
-import * as ip from 'ip';
+import * as ipaddr from 'ipaddr.js';
 import UserAgentParser from 'ua-parser-js';
 // @ts-expect-error - No types available for @whi/http
 import { client as http_client } from '@whi/http';
@@ -262,9 +261,23 @@ export const compare = {
      */
     ipAddresses(request_ip_address: string, session_ip_address: string): boolean {
         log.debug('Comparing user IPs\n    %20.20s = %s', request_ip_address, session_ip_address);
-        return (
-            ip.isPrivate(session_ip_address) || ip.isEqual(request_ip_address, session_ip_address)
-        );
+
+        try {
+            const sessionAddr = ipaddr.process(session_ip_address);
+            const range = sessionAddr.range();
+
+            // Allow if session IP is private (for localhost development)
+            if (range === 'private' || range === 'loopback' || range === 'linkLocal') {
+                return true;
+            }
+
+            // Compare IPs for equality
+            const requestAddr = ipaddr.process(request_ip_address);
+            return sessionAddr.toString() === requestAddr.toString();
+        } catch (error) {
+            log.error('IP comparison error: %s', error);
+            return false;
+        }
     },
 };
 

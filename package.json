@@ -32,7 +32,7 @@
   "dependencies": {
     "@whi/http": "^0.2.1",
     "@whi/stdlog": "^0.3.0",
-    "ip": "^1.1.5",
+    "ipaddr.js": "^2.2.0",
     "ua-parser-js": "^0.7.21"
   },
   "devDependencies": {
@@ -42,7 +42,7 @@
     "@typescript-eslint/parser": "^8.47.0",
     "@vitest/coverage-v8": "^4.0.13",
     "eslint": "^9.39.1",
-    "knex": "^0.21.1",
+    "knex": "^3.1.0",
     "prettier": "^3.6.2",
     "sqlite3": "^5.1.7",
     "superstruct": "^0.8.3",

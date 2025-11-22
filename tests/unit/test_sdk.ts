@@ -102,6 +102,11 @@ function comparison_tests() {
         expect(compare.ipAddresses('8.8.8.8', '192.168.1.1')).toBe(true);
         expect(compare.ipAddresses('1.2.3.4', '10.0.0.1')).toBe(true);
     });
+
+    it('should handle invalid IP addresses gracefully', () => {
+        expect(compare.ipAddresses('95.107.167.200', 'not-an-ip')).toBe(false);
+        expect(compare.ipAddresses('invalid', '8.8.8.8')).toBe(false);
+    });
 }
 
 function collection_create_tests() {
