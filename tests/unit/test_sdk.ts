@@ -1,6 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import stdlog from '@whi/stdlog';
+import { Logger } from 'loganite';
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { Collection, compare } from '../../dist/index.js';
@@ -8,9 +8,7 @@ import { config } from '../../dist/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 
-const log = stdlog(path.basename(__filename), {
-    level: process.env.LOG_LEVEL || 'fatal',
-});
+const log = new Logger(path.basename(__filename), process.env.LOG_LEVEL || 'fatal');
 
 interface CollectionData {
     id: string;
@@ -38,7 +36,7 @@ const user_agent =
 function basic_tests() {
     it('should create a new user', async () => {
         const user = await magicauth.user(password);
-        log.silly('Result: %s', JSON.stringify(user, null, 4));
+        log.trace('Result: %s', JSON.stringify(user, null, 4));
 
         expect(user.id).toBeTypeOf('string');
         expect(user.id.slice(0, 8)).toBe('Auth_U1-');
@@ -48,7 +46,7 @@ function basic_tests() {
 
     it('should create a new session', async () => {
         const session = await magicauth.session(magic_id, password, ip_address, user_agent);
-        log.silly('Result: %s', JSON.stringify(session, null, 4));
+        log.trace('Result: %s', JSON.stringify(session, null, 4));
 
         expect(session.id).toBeTypeOf('string');
 
@@ -57,7 +55,7 @@ function basic_tests() {
 
     it('should validate a session', async () => {
         const session = await magicauth.validate(session_id, ip_address, user_agent);
-        log.silly('Result: %s', JSON.stringify(session, null, 4));
+        log.trace('Result: %s', JSON.stringify(session, null, 4));
 
         expect(session.id).toBeTypeOf('string');
     });
@@ -112,7 +110,7 @@ function comparison_tests() {
 function collection_create_tests() {
     it('should create a new collection', async () => {
         const collection = await Collection.create();
-        log.silly('Collection created: %s', JSON.stringify(collection, null, 4));
+        log.trace('Collection created: %s', JSON.stringify(collection, null, 4));
 
         expect(collection.id).toBeTypeOf('string');
         expect(collection.access_key).toBeTypeOf('object');

@@ -36,9 +36,8 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@whi/http": "^0.2.1",
-    "@whi/stdlog": "^0.3.0",
     "ipaddr.js": "^2.2.0",
+    "loganite": "^0.1.2",
     "ua-parser-js": "^0.7.21"
   },
   "devDependencies": {

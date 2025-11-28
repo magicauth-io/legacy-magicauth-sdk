@@ -1,29 +1,52 @@
-import * as path from 'path';
-import { fileURLToPath } from 'url';
-// @ts-expect-error - No types available for @whi/stdlog
-import stdlog from '@whi/stdlog';
+import { Logger } from 'loganite';
 import * as ipaddr from 'ipaddr.js';
 import UserAgentParser from 'ua-parser-js';
-// @ts-expect-error - No types available for @whi/http
-import { client as http_client } from '@whi/http';
 
-const __filename = fileURLToPath(import.meta.url);
+const log = new Logger('magicauth-sdk', process.env.LOG_LEVEL || 'fatal');
 
-const log = stdlog(path.basename(__filename), {
-    level: process.env.LOG_LEVEL || 'fatal',
-});
+class HttpClient {
+    constructor(
+        private baseUrl: string,
+        private defaultHeaders: Record<string, string> = {}
+    ) {}
+
+    async post(path: string, data?: Record<string, unknown>): Promise<ApiResponse> {
+        const response = await fetch(this.baseUrl + path, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...this.defaultHeaders },
+            body: data ? JSON.stringify(data) : undefined,
+        });
+        return response.json() as Promise<ApiResponse>;
+    }
+
+    async put(path: string, data?: Record<string, unknown>): Promise<ApiResponse> {
+        const response = await fetch(this.baseUrl + path, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', ...this.defaultHeaders },
+            body: data ? JSON.stringify(data) : undefined,
+        });
+        return response.json() as Promise<ApiResponse>;
+    }
+
+    async get(path: string, params?: Record<string, unknown>): Promise<ApiResponse> {
+        const url = new URL(this.baseUrl + path);
+        if (params) {
+            Object.entries(params).forEach(([key, value]) => {
+                url.searchParams.append(key, String(value));
+            });
+        }
+        const response = await fetch(url, {
+            headers: this.defaultHeaders,
+        });
+        return response.json() as Promise<ApiResponse>;
+    }
+}
 
 interface ApiResponse {
     status?: number;
     error?: string;
     message?: string;
     [key: string]: unknown;
-}
-
-interface HttpClient {
-    post(endpoint: string, data?: Record<string, unknown>): Promise<ApiResponse>;
-    put(endpoint: string, data?: Record<string, unknown>): Promise<ApiResponse>;
-    get(endpoint: string, params?: Record<string, unknown>): Promise<ApiResponse>;
 }
 
 interface CollectionResponse {
@@ -67,11 +90,7 @@ export class Collection {
      * @returns Collection details including id and access_key
      */
     static async create(): Promise<CollectionResponse> {
-        const anonymous = http_client.create(config.API_BASE_URL, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }) as HttpClient;
+        const anonymous = new HttpClient(config.API_BASE_URL);
         return (await anonymous.post('/collections')) as unknown as CollectionResponse;
     }
 
@@ -86,12 +105,9 @@ export class Collection {
         this.access_key = access_key;
         this.bindings = bindings;
 
-        this.api = http_client.create(config.API_BASE_URL, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Authentic ${access_key}`,
-            },
-        }) as HttpClient;
+        this.api = new HttpClient(config.API_BASE_URL, {
+            Authorization: `Authentic ${access_key}`,
+        });
     }
 
     /**

@@ -1,6 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import stdlog from '@whi/stdlog';
+import { Logger } from 'loganite';
 import crypto from 'crypto';
 import { describe, it, expect, afterAll } from 'vitest';
 import knex, { Knex } from 'knex';
@@ -11,9 +11,7 @@ import { config } from '../../dist/index.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const log = stdlog(path.basename(__filename), {
-    level: process.env.LOG_LEVEL || 'fatal',
-});
+const log = new Logger(path.basename(__filename), process.env.LOG_LEVEL || 'fatal');
 
 interface CollectionData {
     id: string;
@@ -85,7 +83,7 @@ function basic_tests() {
         };
         const ids = await database('users').insert(user);
         user.id = ids[0];
-        log.silly('Result: %s', JSON.stringify(user, null, 4));
+        log.trace('Result: %s', JSON.stringify(user, null, 4));
 
         expect(user.id).toBeTypeOf('number');
         expect(user.email).toBeTypeOf('string');
@@ -98,7 +96,7 @@ function basic_tests() {
             ip_address,
             user_agent
         );
-        log.silly('Result: %s', JSON.stringify(session, null, 4));
+        log.trace('Result: %s', JSON.stringify(session, null, 4));
 
         expect(session.id).toBeTypeOf('string');
 
@@ -107,11 +105,11 @@ function basic_tests() {
 
     it('should validate session', async () => {
         const magicsession = await magicauth.validate(session_id, ip_address, user_agent);
-        log.silly('Magic user: %s', JSON.stringify(magicsession, null, 4));
+        log.trace('Magic user: %s', JSON.stringify(magicsession, null, 4));
 
         const users = await database('users').where('magicauth_id', magicsession.credential.id);
         const user = users[0] as LocalUser;
-        log.silly('Result: %s', JSON.stringify(user, null, 4));
+        log.trace('Result: %s', JSON.stringify(user, null, 4));
 
         expect(user.id).toBeTypeOf('number');
         expect(user.email).toBeTypeOf('string');
@@ -127,7 +125,7 @@ function basic_tests() {
             ip_address,
             user_agent
         );
-        log.silly('Result: %s', JSON.stringify(session, null, 4));
+        log.trace('Result: %s', JSON.stringify(session, null, 4));
 
         expect(session.id).toBeTypeOf('string');
 
@@ -139,7 +137,7 @@ function basic_tests() {
 
         const users = await database('users').where('magicauth_id', magicsession.credential.id);
         const user = users[0] as LocalUser;
-        log.silly('Result: %s', JSON.stringify(user, null, 4));
+        log.trace('Result: %s', JSON.stringify(user, null, 4));
 
         expect(user.id).toBeTypeOf('number');
         expect(user.email).toBeTypeOf('string');
@@ -166,14 +164,14 @@ function password_update_tests() {
             original_password,
             new_password
         );
-        log.silly('Updated user: %s', JSON.stringify(updated_user, null, 4));
+        log.trace('Updated user: %s', JSON.stringify(updated_user, null, 4));
 
         expect(updated_user.id).toBe(test_user_id);
     });
 
     it('should create session with new password', async () => {
         const session = await magicauth.session(test_user_id, new_password, ip_address, user_agent);
-        log.silly('Session with new password: %s', JSON.stringify(session, null, 4));
+        log.trace('Session with new password: %s', JSON.stringify(session, null, 4));
 
         expect(session.id).toBeTypeOf('string');
     });
@@ -216,7 +214,7 @@ function error_handling_tests() {
 
 describe('SDK Integration Tests', () => {
     afterAll(async () => {
-        log.normal('Destroy database connection...');
+        log.info('Destroy database connection...');
         await database.destroy();
     });
 
