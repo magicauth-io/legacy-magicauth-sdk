@@ -396,7 +396,7 @@ npm test
 
 ### Environment Variables
 
-- `LOG_LEVEL` - Set logging level (default: `fatal`, options: `silly`, `debug`, `info`, `warn`, `error`, `fatal`)
+- `LOG_LEVEL` - Set logging level (default: `fatal`, options: `trace`, `debug`, `info`, `normal`, `warn`, `error`, `fatal`)
 
 ```bash
 LOG_LEVEL=debug npm test

@@ -2,7 +2,7 @@ import { Logger } from 'loganite';
 import * as ipaddr from 'ipaddr.js';
 import UserAgentParser from 'ua-parser-js';
 
-const log = new Logger('magicauth-sdk', process.env.LOG_LEVEL || 'fatal');
+const log = new Logger('magicauth-sdk', globalThis.process?.env?.LOG_LEVEL || 'fatal');
 
 class HttpClient {
     constructor(
